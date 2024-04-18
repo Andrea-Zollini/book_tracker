@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from "vue";
 const title = ref("");
+const result = ref(null);
 
 const submit = () => {
   //   console.log(title.value);
@@ -11,10 +12,17 @@ const buildQueryParam = (s) => {
   return s.split(" ").join("+");
 };
 
-const handleRequest = () => {
-  const url = "https://openlibrary.org/search.json?lang=it";
+const handleRequest = async () => {
   const query = buildQueryParam(title.value);
-  console.log(query);
+  const url = `https://openlibrary.org/search.json?lang=it&q=${query}`;
+  try {
+    const res = await fetch(url);
+    const data = await res.json();
+    result.value = data;
+    console.log(result.value);
+  } catch (e) {
+    console.error(e);
+  }
 };
 </script>
 
